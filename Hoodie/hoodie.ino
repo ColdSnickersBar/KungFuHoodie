@@ -18,11 +18,11 @@
 #define RIGHT A6
 #define LEFT A7
 
-#define TRIG5_RXI 0
+#define TRIG5 0
 #define TRIG4_TXO 1
 #define MP3_DREQ 2
 #define ROT_A 3
-#define ROT_LEDB 5
+#define D5 5
 #define MP3_CS 6
 #define MP3_DCS 7
 #define MP3_RST 8
@@ -73,7 +73,7 @@ void setup()
   if (debugging)
   {
     Serial.begin(9600);
-    Serial.println(F("Lilypad MP3 Player prank sketch"));
+    Serial.println(F("Lilypad MP3 Player hoodie sketch"));
   }
   
   // Wait until we're ready to play the prank:
@@ -135,6 +135,7 @@ void setup()
   pinMode(TRIG3, INPUT);
   pinMode(A1, INPUT);
   pinMode(A3, INPUT);
+  pinMode(3, OUTPUT);
   randomSeed(0);
 }
 
@@ -151,24 +152,28 @@ void loop() {
 
 
   int xAxisValue = analogRead(A0) - 512;
-  int yAxisValue = analogRead(A1) - 512;
-  int zAxisValue = analogRead(A3) - 542;
+  int yAxisValue = analogRead(A3) - 512;
+  int zAxisValue = analogRead(A1) - 542;
 
   double magnitude = sqrt(pow(xAxisValue, 2) + pow(yAxisValue, 2) + pow(zAxisValue, 2));
 
   Serial.print(F("X, Y, Z, Magnitude: "));
   Serial.print(xAxisValue);
-  Serial.print(F(" "));
+  Serial.print(F(", "));
   Serial.print(yAxisValue);
-  Serial.print(F(" "));
+  Serial.print(F(", "));
   Serial.print(zAxisValue);
-  Serial.print(F(" "));
+  Serial.print(F(", "));
   Serial.println(magnitude);
 
-  if (!MP3player.isPlaying() && magnitude > 400) {
+  //digitalWrite(D5, HIGH);
+
+  if (!MP3player.isPlaying() && magnitude > 600) {
     getRandomTrack(20);
     startPlaying();
+    digitalWrite(3, HIGH);
     delay(1000);
+    digitalWrite(3, LOW);
   }
 }
 
