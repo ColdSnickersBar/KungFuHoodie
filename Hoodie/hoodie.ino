@@ -148,10 +148,7 @@ void loop() {
 //    stopPlaying();
 //  }
 
-//  if (!MP3player.isPlaying()) {
-//    getRandomTrack();
-//    startPlaying();
-//  }
+
 
   int xAxisValue = analogRead(A0) - 512;
   int yAxisValue = analogRead(A1) - 512;
@@ -167,6 +164,12 @@ void loop() {
   Serial.print(zAxisValue);
   Serial.print(F(" "));
   Serial.println(magnitude);
+
+  if (!MP3player.isPlaying() && magnitude > 400) {
+    getRandomTrack(20);
+    startPlaying();
+    delay(1000);
+  }
 }
 
 
@@ -193,8 +196,8 @@ void errorBlink(int blinks)
 }
 
 
-void getRandomTrack() {
-    int randomIterations = random(10);
+void getRandomTrack(int space) {
+    int randomIterations = random(space);
     for (int i = 0; i < randomIterations; i++) {
         getNextTrack();
     }
@@ -222,7 +225,7 @@ void getNextFile()
   if (!result)
   {
     sd.chdir("/",true);
-    getNextTrack();
+    getNextFile();
     return;
   }
   file.getFilename(track);  
@@ -251,8 +254,12 @@ boolean isPlayable()
     (strcasecmp(extension,"AAC") == 0)
   )
     return true;
-  else
+  else {
+    Serial.print(F("Skipping file "));
+    Serial.println(track);
     return false;
+  }
+    
 }
 
 

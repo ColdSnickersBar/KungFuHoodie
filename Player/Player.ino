@@ -532,7 +532,6 @@ void loop()
   
   // Are we in "playing" mode, and has the
   // current file ended?
-  
   if (playing && !MP3player.isPlaying())
   {
     getNextTrack(); // Set up for next track
