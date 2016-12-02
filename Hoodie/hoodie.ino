@@ -46,7 +46,6 @@ char track[13];
 
 boolean debugging = true;
 
-
 void setup()
 {
   unsigned char result;
@@ -139,6 +138,9 @@ void setup()
   randomSeed(0);
 }
 
+int timestamp = 0;
+const int lightsDelay = 3000;
+const int minSoundTime = 200;
 
 void loop() {
   // Play the files on the SD card. Over and over and over...
@@ -149,7 +151,7 @@ void loop() {
 //    stopPlaying();
 //  }
 
-
+  
 
   int xAxisValue = analogRead(A0) - 512;
   int yAxisValue = analogRead(A3) - 512;
@@ -166,16 +168,20 @@ void loop() {
   Serial.print(F(", "));
   Serial.println(magnitude);
 
-  //digitalWrite(D5, HIGH);
+  if(millis() > timestamp + lightsDelay){
+    digitalWrite(3, LOW);
+  }else{
+    digitalWrite(3, HIGH);
+  }
 
-  if (!MP3player.isPlaying() && magnitude > 600) {
+  if ((!MP3player.isPlaying() || (millis() > timestamp + minSoundTime)) && magnitude > 600) {
+    stopPlaying();
     getRandomTrack(20);
     startPlaying();
-    digitalWrite(3, HIGH);
-    delay(1000);
-    digitalWrite(3, LOW);
+    timestamp = millis();
   }
 }
+
 
 
 void errorBlink(int blinks)
