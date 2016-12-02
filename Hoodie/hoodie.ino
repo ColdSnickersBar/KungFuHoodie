@@ -1,34 +1,4 @@
-// "Prank" example sketch for Lilypad MP3 Player
-// Mike Grusin, SparkFun Electronics
-// http://www.sparkfun.com
 
-// This was a prank we pulled on "According To" Pete Dokter.
-// While Pete was spending the week at Disneyland with his kids,
-// we attached the LilyPad MP3 Player to the big speakers in his
-// office. The below sketch waits a given number of hours,
-// then plays the audio files on the card while _very slowly_
-// ramping up the volume to just barely noticeable. The audio
-// file we used was "It's a Small World After All". You can
-// of course use whatever you like (hopefully something more
-// humane).
-
-// Uses the SdFat library by William Greiman, which is supplied
-// with this archive, or download from http://code.google.com/p/sdfatlib/
-
-// Uses the SFEMP3Shield library by Bill Porter, which is supplied
-// with this archive, or download from http://www.billporter.info/
-
-// License:
-// We use the "beerware" license for our firmware. You can do
-// ANYTHING you want with this code. If you like it, and we meet
-// someday, you can, but are under no obligation to, buy me a
-// (root) beer in return.
-
-// Have fun! 
-// -your friends at SparkFun
-
-// Revision history:
-// 1.0 initial release MDG 2013/4/1
 
 
 // We'll need a few libraries to access all this hardware!
@@ -43,8 +13,8 @@
 #define ROT_LEDG A1
 #define SHDN_GPIO1 A2
 #define ROT_B A3
-#define TRIG2_SDA A4
-#define TRIG3_SCL A5
+#define TRIG2 A4
+#define TRIG3 A5
 #define RIGHT A6
 #define LEFT A7
 
@@ -160,7 +130,11 @@ void setup()
   digitalWrite(SHDN_GPIO1,HIGH);
   delay(2);
 
-  pinMode(TRIG4_TXO, INPUT);
+  pinMode(TRIG1, INPUT);
+  pinMode(TRIG2, INPUT);
+  pinMode(TRIG3, INPUT);
+  pinMode(A1, INPUT);
+  pinMode(A3, INPUT);
   randomSeed(0);
 }
 
@@ -173,11 +147,26 @@ void loop() {
 //  } else if (digitalRead(TRIG4_TXO) == LOW && MP3player.isPlaying()) {
 //    stopPlaying();
 //  }
-  if (!MP3player.isPlaying()) {
-    getRandomTrack();
-    startPlaying();
-  }
-  delay(1000);
+
+//  if (!MP3player.isPlaying()) {
+//    getRandomTrack();
+//    startPlaying();
+//  }
+
+  int xAxisValue = analogRead(A0) - 512;
+  int yAxisValue = analogRead(A1) - 512;
+  int zAxisValue = analogRead(A3) - 542;
+
+  double magnitude = sqrt(pow(xAxisValue, 2) + pow(yAxisValue, 2) + pow(zAxisValue, 2));
+
+  Serial.print(F("X, Y, Z, Magnitude: "));
+  Serial.print(xAxisValue);
+  Serial.print(F(" "));
+  Serial.print(yAxisValue);
+  Serial.print(F(" "));
+  Serial.print(zAxisValue);
+  Serial.print(F(" "));
+  Serial.println(magnitude);
 }
 
 
