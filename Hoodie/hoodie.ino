@@ -140,7 +140,7 @@ void setup()
 
 int timestamp = 0;
 const int lightsDelay = 3000;
-const int minSoundTime = 200;
+const int minSoundTime = 100;
 
 void loop() {
   // Play the files on the SD card. Over and over and over...
